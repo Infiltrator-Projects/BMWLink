@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 cmake_minimum_required(VERSION 3.20)
-project(BMWLINK VERSION 0.0.1 LANGUAGES C)
+project(BMWLINK VERSION 0.1.0 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
@@ -19,3 +19,7 @@ add_test(NAME bmwlink-smoke COMMAND bmwlink-smoke)
 add_executable(bmwlink-obd2 tests/test_obd2.c)
 target_link_libraries(bmwlink-obd2 PRIVATE BMWLINK::Core)
 add_test(NAME bmwlink-obd2 COMMAND bmwlink-obd2)
+
+add_executable(bmwlink-generic-diagnostics tests/test_generic_diagnostics.c)
+target_link_libraries(bmwlink-generic-diagnostics PRIVATE BMWLINK::Core)
+add_test(NAME bmwlink-generic-diagnostics COMMAND bmwlink-generic-diagnostics)
