@@ -27,8 +27,8 @@ int main(void)
     CHECK(bmwlink_elm327_protocol_definition_count() >= 10U);
     CHECK(bmwlink_diagnostic_execution_mode_for_adapter(LINK_ADAPTER_KIND_ELM327) == LINK_DIAGNOSTIC_EXECUTION_ELM_COMMAND_SURFACE);
     CHECK(bmwlink_diagnostic_execution_mode_for_adapter(LINK_ADAPTER_KIND_TACTRIX_OPENPORT2) == LINK_DIAGNOSTIC_EXECUTION_NATIVE_ISOTP);
-    CHECK(bmwlink_isotp_can_data_length_is_valid(8U));
-    CHECK(bmwlink_isotp_can_data_length_is_valid(64U));
+    CHECK(bmwlink_isotp_can_data_length_is_valid(false, 8U));
+    CHECK(bmwlink_isotp_can_data_length_is_valid(true, 64U));
     CHECK(bmwlink_uds_standard_service_count() == LINK_UDS_STANDARD_SERVICE_COUNT);
     CHECK(bmwlink_uds_standard_service_find(LINK_UDS_SERVICE_READ_DATA_BY_IDENTIFIER) != NULL);
 
