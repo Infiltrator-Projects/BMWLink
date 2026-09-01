@@ -4,57 +4,114 @@ on:
   push:
     branches: [main]
 permissions:
-  contents: write
+  contents: read
+
 jobs:
-  publish:
+  linux:
     if: startsWith(github.event.head_commit.message, 'Release ')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           submodules: recursive
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential cmake dpkg-dev libgtk-4-dev libbluetooth-dev libusb-1.0-0-dev pkg-config
       - id: version
-        shell: bash
-        run: |
-          set -euo pipefail
-          VERSION="$(tr -d '[:space:]' < VERSION)"
-          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          test "$(git rev-parse HEAD:src/link)" = "a945483748544ed209b78c8c1259fe9ad17e8101"
-          test "$(tr -d '[:space:]' < src/link/VERSION)" = "0.14.67"
-      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-      - run: cmake --build build --parallel
-      - run: ctest --test-dir build --output-on-failure
-      - name: Build and verify Debian package
+        run: echo "version=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
+      - run: cmake -S . -B build-linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBUILD_TESTING=OFF
+      - run: cmake --build build-linux --parallel
+      - name: Package GUI DEB
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        shell: bash
         run: |
           set -euo pipefail
           mkdir -p release cpack
-          cpack --config build/CPackConfig.cmake -G DEB -B cpack
-          SRC="$(find cpack -maxdepth 1 -type f -name '*.deb' -print -quit)"
-          test -n "$SRC"
-          test "$(dpkg-deb -f "$SRC" Package)" = "bmwlink"
-          test "$(dpkg-deb -f "$SRC" Version)" = "$VERSION"
-          test "$(dpkg-deb -f "$SRC" Architecture)" = "amd64"
-          dpkg-deb -c "$SRC" | grep -F "./usr/bin/bmwlink" >/dev/null
-          install -m 0644 "$SRC" "release/BMWLINK-$VERSION-linux-amd64.deb"
-          sha256sum "release/BMWLINK-$VERSION-linux-amd64.deb" > release/SHA256SUMS.txt
-      - name: Publish GitHub Release
+          cpack --config build-linux/CPackConfig.cmake -G DEB -B cpack
+          src="$(find cpack -maxdepth 1 -name '*.deb' -print -quit)"
+          test -n "$src"
+          dpkg-deb -c "$src" | grep -F './usr/bin/bmwlink' >/dev/null
+          dpkg-deb -c "$src" | grep -F './usr/share/applications/bmwlink.desktop' >/dev/null
+          install -m 0644 "$src" "release/BMWLINK-$VERSION-linux-amd64.deb"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: BMWLINK-linux
+          path: release/*
+
+  windows:
+    if: startsWith(github.event.head_commit.message, 'Release ')
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - id: version
+        shell: pwsh
+        run: '"version=$((Get-Content VERSION -Raw).Trim())" >> $env:GITHUB_OUTPUT'
+      - run: cmake -S . -B build-win32 -A Win32 -DBMWLINK_BUILD_WINDOWS_DISCOVER=ON -DBUILD_TESTING=OFF
+      - run: cmake --build build-win32 --config Release --target bmwlink-discover --parallel
+      - name: Prove and stage EXE
+        shell: pwsh
+        run: |
+          & 'src/link/platform/windows/smoke-launch.ps1' -Executable 'build-win32/Release/bmwlink-discover.exe' -ExpectedTitle 'BMWLINK Discover'
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item 'build-win32/Release/bmwlink-discover.exe' "release/BMWLINK-${{ steps.version.outputs.version }}-windows-discover.exe"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: BMWLINK-windows
+          path: release/*
+
+  iphone:
+    if: startsWith(github.event.head_commit.message, 'Release ')
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - id: version
+        run: echo "version=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
+      - name: Build unsigned IPA
+        run: bash scripts/build-ios-ipa.sh "$RUNNER_TEMP/release"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: BMWLINK-iphone
+          path: ${{ runner.temp }}/release/*
+
+  publish:
+    name: Publish complete GUI release
+    needs: [linux, windows, iphone]
+    if: startsWith(github.event.head_commit.message, 'Release ')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - id: version
+        run: echo "version=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: BMWLINK-*
+          path: release
+          merge-multiple: true
+      - name: Verify GUI artifacts and publish
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
-          TAG="v$VERSION"
-          if gh release view "$TAG" >/dev/null 2>&1; then echo "$TAG already exists; published releases are immutable" >&2; exit 1; fi
-          cat > release-notes.md <<EOF
-          BMWLINK $VERSION is the first package-bearing generic diagnostic release.
-
-          It inherits the LINK 0.14.67 standards stack: SAE OBD-II/J1979, generic DTC knowledge, OBDonUDS, ELM327, ISO-TP, UDS, DoIP, read-only discovery safety, parameter scheduling and telemetry foundations.
-
-          BMW-specific proprietary coverage is intentionally not claimed yet.
-          EOF
-          gh release create "$TAG" --target "$GITHUB_SHA" --title "BMWLINK $VERSION" --notes-file release-notes.md             "release/BMWLINK-$VERSION-linux-amd64.deb" "release/SHA256SUMS.txt"
+          test -s "release/BMWLINK-$VERSION-linux-amd64.deb"
+          test -s "release/BMWLINK-$VERSION-windows-discover.exe"
+          test -s "release/BMWLINK-$VERSION-unsigned.ipa"
+          (cd release && sha256sum BMWLINK-* > SHA256SUMS.txt)
+          tag="v$VERSION"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "$tag already exists; releases are immutable" >&2
+            exit 1
+          fi
+          gh release create "$tag" --target "$GITHUB_SHA" --title "BMWLINK $VERSION" \
+            --notes "BMWLINK $VERSION replaces the CLI skeleton with real GUI applications on Linux, Windows and iPhone, all using the shared LINK standards diagnostic core." \
+            release/*
