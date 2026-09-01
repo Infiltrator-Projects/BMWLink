@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=BMWLINK
+Comment=BMW vehicle diagnostics
+Exec=bmwlink
+Icon=applications-engineering
+Terminal=false
+Categories=Utility;
+Keywords=BMW;OBD;diagnostics;vehicle;
