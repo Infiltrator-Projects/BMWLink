@@ -5,8 +5,10 @@ on:
     branches: [main]
 permissions:
   contents: read
+
 jobs:
-  portable-core:
+  core:
+    name: Portable C11 core
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -21,3 +23,72 @@ jobs:
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel
       - run: ctest --test-dir build --output-on-failure
+
+  linux-gui:
+    name: Linux GTK4 GUI
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential cmake dpkg-dev libgtk-4-dev libbluetooth-dev libusb-1.0-0-dev pkg-config xvfb
+      - run: cmake -S . -B build-linux -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBUILD_TESTING=OFF
+      - run: cmake --build build-linux --parallel
+      - name: Prove GUI launches and navigation is live
+        shell: bash
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/navigation.log"
+          GTK_A11Y=none G_DEBUG=fatal-warnings timeout 45s xvfb-run -a ./build-linux/bmwlink --ui-navigation-stress | tee "$log"
+          grep -Fq 'LINK GTK timed navigation stress verified:' "$log"
+          grep -Fq 'desktop product is GUI-first' app/linux/main.c
+      - name: Verify Debian GUI payload
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/cpack"
+          cpack --config build-linux/CPackConfig.cmake -G DEB -B "$RUNNER_TEMP/cpack"
+          deb="$(find "$RUNNER_TEMP/cpack" -maxdepth 1 -name '*.deb' -print -quit)"
+          test -n "$deb"
+          dpkg-deb -c "$deb" | grep -F './usr/bin/bmwlink' >/dev/null
+          dpkg-deb -c "$deb" | grep -F './usr/share/applications/bmwlink.desktop' >/dev/null
+          dpkg-deb -c "$deb" | grep -F './usr/lib/udev/rules.d/60-bmwlink-openport2.rules' >/dev/null
+
+  windows-gui:
+    name: Windows Discover GUI
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - name: Configure
+        shell: pwsh
+        run: cmake -S . -B build-win32 -A Win32 -DBMWLINK_BUILD_WINDOWS_DISCOVER=ON -DBUILD_TESTING=OFF
+      - name: Build
+        shell: pwsh
+        run: cmake --build build-win32 --config Release --target bmwlink-discover --parallel
+      - name: Prove GUI launches
+        shell: pwsh
+        run: "& 'src/link/platform/windows/smoke-launch.ps1' -Executable 'build-win32/Release/bmwlink-discover.exe' -ExpectedTitle 'BMWLINK Discover'"
+
+  iphone-gui:
+    name: iPhone SwiftUI GUI
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: recursive
+      - name: Build iOS simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(tr -d '[:space:]' < VERSION)"
+          project_versions="$(grep -E '^[[:space:]]*MARKETING_VERSION = ' app/ios/BMWLINK.xcodeproj/project.pbxproj | sed -E 's/.*= ([^;]+);/\1/' | sort -u)"
+          test "$project_versions" = "$version"
+          xcodebuild -project app/ios/BMWLINK.xcodeproj -scheme BMWLINK -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO \
+            MARKETING_VERSION="$version" BMWLINK_SOURCE_REVISION="$GITHUB_SHA" build
