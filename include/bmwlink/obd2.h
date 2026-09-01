@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+#ifndef BMWLINK_OBD2_H
+#define BMWLINK_OBD2_H
+#include "link/obd2.h"
+#include "link/dtc_knowledge.h"
+typedef LinkObd2Result BmwlinkObd2Result;
+typedef LinkObd2DecodedPid BmwlinkObd2DecodedPid;
+typedef LinkObd2DtcKind BmwlinkObd2DtcKind;
+#define BMWLINK_OBD2_RESULT_OK LINK_OBD2_RESULT_OK
+#define BMWLINK_OBD2_DTC_STORED LINK_OBD2_DTC_STORED
+#define BMWLINK_OBD2_DTC_PENDING LINK_OBD2_DTC_PENDING
+#define BMWLINK_OBD2_DTC_PERMANENT LINK_OBD2_DTC_PERMANENT
+#define bmwlink_obd2_pid_definition_count link_obd2_pid_definition_count
+#define bmwlink_obd2_mode01_assigned_count link_obd2_mode01_assigned_count
+#define bmwlink_obd2_build_live_pid_request link_obd2_build_live_pid_request
+#define bmwlink_obd2_build_freeze_pid_request link_obd2_build_freeze_pid_request
+#define bmwlink_obd2_build_supported_pid_request link_obd2_build_supported_pid_request
+#define bmwlink_obd2_build_vin_request link_obd2_build_vin_request
+#define bmwlink_obd2_build_dtc_request link_obd2_build_dtc_request
+#define bmwlink_obd2_decode_pid_payload link_obd2_decode_pid_payload
+#define bmwlink_obd2_decode_dtc_pair link_obd2_decode_dtc_pair
+#define bmwlink_obd2_obdonuds_pid_to_did link_obd2_obdonuds_pid_to_did
+#define bmwlink_dtc_resolve link_dtc_resolve
+#endif

@@ -15,3 +15,7 @@ target_link_libraries(bmwlink-core PUBLIC LINK::Core)
 add_executable(bmwlink-smoke tests/test_smoke.c)
 target_link_libraries(bmwlink-smoke PRIVATE BMWLINK::Core)
 add_test(NAME bmwlink-smoke COMMAND bmwlink-smoke)
+
+add_executable(bmwlink-obd2 tests/test_obd2.c)
+target_link_libraries(bmwlink-obd2 PRIVATE BMWLINK::Core)
+add_test(NAME bmwlink-obd2 COMMAND bmwlink-obd2)
