@@ -36,10 +36,21 @@ if(BMWLINK_BUILD_LINUX_GUI)
   endif()
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(GTK4 REQUIRED IMPORTED_TARGET gtk4>=4.6)
-  add_executable(bmwlink app/linux/main.c)
+  find_program(GLIB_COMPILE_RESOURCES_EXECUTABLE NAMES glib-compile-resources REQUIRED)
+  set(BMWLINK_LINUX_RESOURCE_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/bmwlink-linux-resources.c")
+  add_custom_command(OUTPUT "${BMWLINK_LINUX_RESOURCE_SOURCE}"
+    COMMAND "${GLIB_COMPILE_RESOURCES_EXECUTABLE}" --generate-source --c-name=bmwlink_linux_resources
+      "--target=${BMWLINK_LINUX_RESOURCE_SOURCE}" bmwlink.gresource.xml
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/app/linux"
+    DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/app/linux/bmwlink.gresource.xml"
+      "${CMAKE_CURRENT_SOURCE_DIR}/app/linux/assets/bmwlink-emblem.png"
+    VERBATIM)
+  add_executable(bmwlink app/linux/main.c "${BMWLINK_LINUX_RESOURCE_SOURCE}")
+  set_source_files_properties("${BMWLINK_LINUX_RESOURCE_SOURCE}" PROPERTIES COMPILE_OPTIONS "-w")
   target_link_libraries(bmwlink PRIVATE BMWLINK::Core PkgConfig::GTK4)
   link_enable_linux_gtk_shell(bmwlink UDEV_RULE_NAME "60-bmwlink-openport2.rules")
   install(TARGETS bmwlink RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+  install(FILES app/linux/assets/bmwlink-emblem.png DESTINATION "${CMAKE_INSTALL_DATADIR}/pixmaps" RENAME bmwlink.png)
   install(FILES app/linux/bmwlink.desktop DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
   install(FILES README.md docs/OBD2.md docs/GENERIC_BASELINE.md DESTINATION "${CMAKE_INSTALL_DATADIR}/doc/bmwlink")
   set(CPACK_GENERATOR "DEB")
@@ -66,6 +77,7 @@ if(BMWLINK_BUILD_WINDOWS_DISCOVER)
     PRODUCT_NAME "BMWLINK" PRODUCT_SLUG "bmwlink" WINDOW_CLASS "BMWLINKDiscoverWindow"
     PRODUCT_VERSION "${PROJECT_VERSION}" PRODUCT_COPYRIGHT "Copyright (C) 2026 Shannon Smith"
     PRODUCT_SUBTITLE "BMW Diagnostics"
-    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLink")
+    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLink"
+    PRODUCT_ICON_PNG "${CMAKE_CURRENT_SOURCE_DIR}/app/ios/BMWLINK/Assets.xcassets/AppIcon.appiconset/AppIcon-60@3x.png")
   target_link_libraries(bmwlink-discover PRIVATE BMWLINK::Core)
 endif()

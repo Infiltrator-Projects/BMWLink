@@ -377,6 +377,7 @@ int main(int argc, char **argv)
     descriptor.brand_name = "BMWLINK";
     descriptor.brand_subtitle = "BMW · LINK DIAGNOSTICS";
     descriptor.version = bmwlink_version();
+    descriptor.emblem_resource = "/com/github/Infiltrator-Projects/BMWLINK/bmwlink-emblem.png";
     descriptor.css = css;
     descriptor.render_section = render;
     descriptor.connection_changed = connection_changed;
