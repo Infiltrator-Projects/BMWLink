@@ -37,7 +37,7 @@ static const char css[] =
 ".link-card-note { color:#aab9c7; }"
 ".link-status-chip { border-color:#3b6388; font-weight:700; }"
 ".state-success { color:#a8e0b9; border-color:#4f8c63; }"
-".state-warning { color:#b9d9f3; border-color:#3779ad; }"
+".state-warning { color:#b9d9f3; border-color:#3779ad; }";
 
 static const char *stage(const ProductContext *context)
 {
