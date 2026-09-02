@@ -373,9 +373,9 @@ int main(int argc, char **argv)
     ProductContext context = {0};
     LinkGtkShellDescriptor descriptor = {0};
     descriptor.app_id = "com.github.InfiltratorProjects.BMWLINK";
-    descriptor.window_title = "BMWLINK · Ford Diagnostics";
+    descriptor.window_title = "BMWLINK · BMW Diagnostics";
     descriptor.brand_name = "BMWLINK";
-    descriptor.brand_subtitle = "FORD · LINK DIAGNOSTICS";
+    descriptor.brand_subtitle = "BMW · LINK DIAGNOSTICS";
     descriptor.version = bmwlink_version();
     descriptor.css = css;
     descriptor.render_section = render;
