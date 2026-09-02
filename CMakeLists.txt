@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 cmake_minimum_required(VERSION 3.20)
-project(BMWLINK VERSION 0.2.9 LANGUAGES C)
+project(BMWLINK VERSION 0.2.10 LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
@@ -12,7 +12,7 @@ enable_testing()
 add_library(bmwlink-core STATIC src/bmwlink.c)
 add_library(BMWLINK::Core ALIAS bmwlink-core)
 target_include_directories(bmwlink-core PUBLIC include)
-target_compile_definitions(bmwlink-core PRIVATE BMWLINK_VERSION="0.2.9")
+target_compile_definitions(bmwlink-core PRIVATE BMWLINK_VERSION="0.2.10")
 target_link_libraries(bmwlink-core PUBLIC LINK::Core)
 
 add_executable(bmwlink-smoke tests/test_smoke.c)
