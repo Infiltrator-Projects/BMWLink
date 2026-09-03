@@ -96,4 +96,17 @@ if(BMWLINK_BUILD_WINDOWS_DISCOVER)
     PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLINK"
     PRODUCT_ICON_PNG "${CMAKE_CURRENT_SOURCE_DIR}/app/ios/BMWLINK/Assets.xcassets/AppIcon.appiconset/AppIcon-60@3x.png")
   target_link_libraries(bmwlink-discover PRIVATE BMWLINK::Core)
+  if(MSVC)
+    target_compile_options(bmwlink-discover PRIVATE
+      "/FI${CMAKE_CURRENT_SOURCE_DIR}/src/link/platform/windows/link-discover-theme.h")
+  endif()
+  target_compile_definitions(bmwlink-discover PRIVATE
+    LINK_THEME_BACKGROUND=0x00100B08
+    LINK_THEME_PANEL=0x00251B12
+    LINK_THEME_INPUT=0x001C1510
+    LINK_THEME_TEXT=0x00FBF6F2
+    LINK_THEME_MUTED=0x00BAA58E
+    LINK_THEME_ACCENT=0x00D4691C
+    LINK_THEME_ACCENT_TEXT=0x001C1510
+    "LINK_PRODUCT_FONT_UI=\"Segoe UI\"")
 endif()
