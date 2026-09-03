@@ -25,12 +25,12 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
     @Published private(set) var recordedSampleCount = 0
     @Published private(set) var versionText = "Unknown"
     @Published private(set) var csvExportURL: URL?
-    @Published private(set) var languageOptions = [LinkSettingOption]()
-    @Published private(set) var selectedLanguageID = "system"
-    @Published private(set) var measurementOptions = [LinkSettingOption]()
-    @Published private(set) var selectedMeasurementID = "system"
-    @Published private(set) var preferFavouriteSignals = true
-    @Published private(set) var showUnavailableParameters = true
+    @Published private(set) var languageTags = [String]()
+    @Published private(set) var languageNames = [String]()
+    @Published private(set) var selectedLanguageID = "en-AU"
+    @Published private(set) var measurementKeys = [String]()
+    @Published private(set) var measurementNames = [String]()
+    @Published private(set) var selectedMeasurementID = "metric"
 
     private let controller = BmwLinkDiagnosticsController()
 
@@ -44,11 +44,11 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
     func connect() { if !isActive { controller.start() } }
     func disconnect() { controller.disconnect() }
 
+    var interfaceLocaleIdentifier: String { selectedLanguageID }
+
     func localizedText(_ key: String) -> String { controller.localizedText(forKey: key) }
     func selectLanguage(_ id: String) { controller.setSelectedLanguageTag(id); refresh() }
     func selectMeasurementSystem(_ id: String) { controller.setSelectedMeasurementSystemKey(id); refresh() }
-    func setPreferFavouriteSignals(_ enabled: Bool) { controller.setPreferFavouriteSignals(enabled); refresh() }
-    func setShowUnavailableParameters(_ enabled: Bool) { controller.setShowUnavailableParameters(enabled); refresh() }
 
     func prepareCSVExport() {
         guard let snapshot = controller.csvDataSnapshot() else { return }
@@ -84,14 +84,12 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
         standardResponderSummary = controller.standardResponderSummary
         supportedPIDSummary = controller.supportedPIDSummary
         standardLiveRows = controller.standardLiveValueRows
-        languageOptions = zip(controller.availableLanguageTags, controller.availableLanguageNames)
-            .map { LinkSettingOption(id: $0.0, title: $0.1) }
+        languageTags = controller.availableLanguageTags
+        languageNames = controller.availableLanguageNames
         selectedLanguageID = controller.selectedLanguageTag
-        measurementOptions = zip(controller.availableMeasurementSystemKeys, controller.availableMeasurementSystemNames)
-            .map { LinkSettingOption(id: $0.0, title: $0.1) }
+        measurementKeys = controller.availableMeasurementSystemKeys
+        measurementNames = controller.availableMeasurementSystemNames
         selectedMeasurementID = controller.selectedMeasurementSystemKey
-        preferFavouriteSignals = controller.preferFavouriteSignals
-        showUnavailableParameters = controller.showUnavailableParameters
         isActive = controller.isActive
         isReady = controller.isReady
         recordedSampleCount = Int(clamping: controller.recordedSampleCount)

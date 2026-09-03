@@ -52,13 +52,9 @@
 - (NSArray<NSString *> *)availableMeasurementSystemKeys { return self.shared.availableMeasurementSystemKeys; }
 - (NSArray<NSString *> *)availableMeasurementSystemNames { return self.shared.availableMeasurementSystemNames; }
 - (NSString *)selectedMeasurementSystemKey { return self.shared.selectedMeasurementSystemKey; }
-- (BOOL)preferFavouriteSignals { return self.shared.preferFavouriteSignals; }
-- (BOOL)showUnavailableParameters { return self.shared.showUnavailableParameters; }
 - (NSString *)localizedTextForKey:(NSString *)key { return [self.shared localizedTextForKey:key]; }
 - (void)setSelectedLanguageTag:(NSString *)tag { [self.shared setSelectedLanguageTag:tag]; }
 - (void)setSelectedMeasurementSystemKey:(NSString *)key { [self.shared setSelectedMeasurementSystemKey:key]; }
-- (void)setPreferFavouriteSignals:(BOOL)enabled { [self.shared setPreferFavouriteSignals:enabled]; }
-- (void)setShowUnavailableParameters:(BOOL)enabled { [self.shared setShowUnavailableParameters:enabled]; }
 - (NSArray<NSString *> *)standardLiveValueRows
 {
     return self.shared.standardLiveValueRows;
