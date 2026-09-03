@@ -73,6 +73,7 @@ struct ContentView: View {
             primary: { primaryGrid },
             tools: { supportingTools })
             .linkDiagnosticTheme(productTheme)
+            .linkDiagnosticLocalization { model.localizedText($0) }
     }
 
     private var header: some View {
@@ -84,7 +85,7 @@ struct ContentView: View {
                         .font(.system(size: 29, weight: .bold))
                         .tracking(1.2)
                         .foregroundStyle(ProductTheme.primary)
-                    Text("FORD · LINK DIAGNOSTICS")
+                    Text("BMW · LINK DIAGNOSTICS")
                         .font(.caption2.bold())
                         .tracking(1.2)
                         .foregroundStyle(ProductTheme.accent)
@@ -186,19 +187,11 @@ struct ContentView: View {
             LinkTaskTile(.graph) { ProductGraphView(model: model) }
             LinkTaskTile(.tests) { ProductTestsView(model: model) }
             LinkTaskTile(.services) { ProductServicesView(model: model) }
+            LinkTaskTile(.settings) { ProductSettingsView(model: model) }
         }
     }
 
-    private var supportingTools: some View {
-        LinkPanel {
-            VStack(alignment: .leading, spacing: 7) {
-                LinkSectionHeader(title: "Settings", kicker: "Application")
-                LinkCompactLink("Settings", "Adapter and application information", "gearshape.fill") {
-                    ProductSettingsView(model: model)
-                }
-            }
-        }
-    }
+    private var supportingTools: some View { EmptyView() }
 
 
 }
@@ -489,25 +482,21 @@ private struct ProductServicesView: View {
 
 private struct ProductSettingsView: View {
     @ObservedObject var model: ConnectionViewModel
-
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 15) {
-                LinkLabeledPanel(title: "BMWLINK", systemImage: "gearshape.fill") {
-                    productValueRow("Version", model.versionText, icon: "number.circle")
-                    productDivider
-                    productValueRow("Adapter", model.peripheralName, icon: "antenna.radiowaves.left.and.right")
-                    productDivider
-                    productValueRow("Standards core", "LINK · read-only diagnostic flow", icon: "shield.lefthalf.filled")
-                    Text("Common OBD presentation and geometry come from LINK. BMW-specific diagnostic knowledge remains a separate evidence-backed layer.")
-                        .font(.caption)
-                        .foregroundStyle(ProductTheme.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-            .padding(16)
-        }
-        .productDiagnosticScreen("Settings")
+        LinkDiagnosticSettingsView(
+            languageOptions: model.languageOptions,
+            selectedLanguageID: Binding(get: { model.selectedLanguageID }, set: { model.selectLanguage($0) }),
+            measurementOptions: model.measurementOptions,
+            selectedMeasurementID: Binding(get: { model.selectedMeasurementID }, set: { model.selectMeasurementSystem($0) }),
+            preferFavouriteSignals: Binding(get: { model.preferFavouriteSignals }, set: { model.setPreferFavouriteSignals($0) }),
+            showUnavailableParameters: Binding(get: { model.showUnavailableParameters }, set: { model.setShowUnavailableParameters($0) }),
+            productName: "BMWLINK",
+            productVersion: model.versionText,
+            adapterName: model.peripheralName,
+            adapterIdentity: model.adapterIdentifier,
+            connectionStatus: model.statusText,
+            bundleIdentifier: Bundle.main.bundleIdentifier ?? "Unknown",
+            coreSummary: "LINK 0.14.86 · shared application Settings")
     }
 }
 
