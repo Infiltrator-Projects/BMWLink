@@ -90,7 +90,10 @@ if(BMWLINK_BUILD_WINDOWS_DISCOVER)
     PRODUCT_NAME "BMWLINK" PRODUCT_SLUG "bmwlink" WINDOW_CLASS "BMWLINKDiscoverWindow"
     PRODUCT_VERSION "${PROJECT_VERSION}" PRODUCT_COPYRIGHT "Copyright (C) 2026 Shannon Smith"
     PRODUCT_SUBTITLE "BMW Diagnostics"
-    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLink"
+    PRODUCT_DESCRIPTION "A C-first, open-source BMW vehicle diagnostics platform."
+    PRODUCT_AUTHORS "Shannon Smith"
+    PRODUCT_LICENSE_NAME "GPL-3.0-or-later"
+    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLINK"
     PRODUCT_ICON_PNG "${CMAKE_CURRENT_SOURCE_DIR}/app/ios/BMWLINK/Assets.xcassets/AppIcon.appiconset/AppIcon-60@3x.png")
   target_link_libraries(bmwlink-discover PRIVATE BMWLINK::Core)
 endif()

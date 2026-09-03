@@ -372,6 +372,22 @@ int main(int argc, char **argv)
 {
     ProductContext context = {0};
     LinkGtkShellDescriptor descriptor = {0};
+    LinkAboutInfo about_info = {
+        .product_name = "BMWLINK",
+        .subtitle = "BMW · LINK DIAGNOSTICS",
+        .version = bmwlink_version(),
+        .description = "A C-first, open-source BMW vehicle diagnostics platform authored by Shannon Smith.",
+        .authors = "Shannon Smith",
+        .copyright = "Copyright © 2026 Shannon Smith",
+        .website = "https://github.com/Infiltrator-Projects/BMWLINK",
+        .license_name = "GPL-3.0-or-later",
+        .license_text =
+            "BMWLINK is free software licensed under the GNU General Public "
+            "License version 3 or, at your option, any later version "
+            "(GPL-3.0-or-later).\n\n"
+            "See LICENSE in the source package for the complete licence text.",
+        .credits = "Shannon Smith — Author and project maintainer"
+    };
     descriptor.app_id = "com.github.InfiltratorProjects.BMWLINK";
     descriptor.window_title = "BMWLINK · BMW Diagnostics";
     descriptor.brand_name = "BMWLINK";
@@ -380,6 +396,7 @@ int main(int argc, char **argv)
     descriptor.emblem_resource = "/com/github/Infiltrator-Projects/BMWLINK/bmwlink-emblem.png";
     descriptor.css = css;
     descriptor.render_section = render;
+    descriptor.about = &about_info;
     descriptor.connection_changed = connection_changed;
     descriptor.diagnostic_changed = diagnostic_changed;
     descriptor.use_client_side_titlebar = true;
