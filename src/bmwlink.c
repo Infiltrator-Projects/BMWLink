@@ -7,7 +7,7 @@
 
 #if defined(__APPLE__) && TARGET_OS_IOS
 #ifndef LINK_SOURCE_REVISION
-#define LINK_SOURCE_REVISION "bc5ebe79c972b632e26292f888d02cae3440a13f"
+#define LINK_SOURCE_REVISION "cc3e76a319930dc87060eed8aeef95b6e33ad68b"
 #define BMWLINK_DEFINED_LINK_SOURCE_REVISION 1
 #endif
 #include "link/platform/apple/LinkPortableCore.c"
