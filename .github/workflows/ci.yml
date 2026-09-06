@@ -27,8 +27,16 @@ jobs:
           link_version="$(tr -d '[:space:]' < src/link/VERSION)"
           grep -Fq "#define LINK_VERSION_STRING \"$link_version\"" src/link/include/link/version.h
           grep -Fq '@property(nonatomic, copy, readonly) NSString *linkVersionText;' src/link/platform/apple/LinkDiagnosticsController.h
-          grep -Fq 'pollingSelectionStore.setGlobalStableKeys' app/ios/BMWLINK/ConnectionViewModel.swift
-          grep -Fq 'linkVersionText = controller.linkVersionText' app/ios/BMWLINK/ConnectionViewModel.swift
+          grep -Fq 'class LinkStandardProductViewModel' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'pollingSelectionStore.setGlobalStableKeys' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'linkVersionText = productController.linkVersionText' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'final class ConnectionViewModel: LinkStandardProductViewModel' app/ios/BMWLINK/ConnectionViewModel.swift
+          test "$(wc -l < app/ios/BMWLINK/ConnectionViewModel.swift)" -lt 60
+          ! grep -Fq 'LinkVehicleProfileStore(' app/ios/BMWLINK/ConnectionViewModel.swift
+          grep -Fq 'LinkStandardProductContentView(' app/ios/BMWLINK/ContentView.swift
+          grep -Fq 'LinkStandardProductAppearance(' app/ios/BMWLINK/ContentView.swift
+          test "$(wc -l < app/ios/BMWLINK/ContentView.swift)" -lt 80
+          ! grep -Fq 'LinkTaskTile(' app/ios/BMWLINK/ContentView.swift
           ! grep -Fq '0.15.4-compatible face' app/ios/BMWLINK/ContentView.swift
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel
@@ -102,18 +110,19 @@ jobs:
           GTK_A11Y=none G_DEBUG=fatal-warnings timeout 45s xvfb-run -a ./build-linux/bmwlink --ui-navigation-stress | tee "$log"
           grep -Fq 'LINK GTK timed navigation stress verified:' "$log"
           grep -Fq 'BMWLINK is GUI-first' app/linux/main.c
-          grep -Fq 'LinkTaskTile(.vehicle)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkTaskTile(.errors)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkTaskTile(.table)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkTaskTile(.graph)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkTaskTile(.tests)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkTaskTile(.services)' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkDiagnosticAboutButton' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkDiagnosticAboutView' app/ios/BMWLINK/ContentView.swift
+          grep -Fq 'LinkTaskTile(.vehicle)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkTaskTile(.errors)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkTaskTile(.table)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkTaskTile(.graph)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkTaskTile(.tests)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkTaskTile(.services)' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkDiagnosticAboutButton' src/link/platform/apple/LinkDiagnosticUI.swift
+          grep -Fq 'LinkDiagnosticAboutView' src/link/platform/apple/LinkDiagnosticUI.swift
           grep -Fq 'descriptor.about = &about_info;' app/linux/main.c
           grep -Fq 'link_gtk_show_about' src/link/platform/linux/link-gtk-about.c
           ! grep -Fq 'LinkHomeTile("OBD"' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'return self.shared.standardLiveValueRows;' platform/apple/BmwLinkDiagnosticsController.m
+          grep -Fq '@interface BmwLinkDiagnosticsController : LinkProductDiagnosticsController' platform/apple/BmwLinkDiagnosticsController.h
+          grep -Fq 'return _shared.standardLiveValueRows;' src/link/platform/apple/LinkDiagnosticsController.m
           if grep -Eq '\.link-(connection-bar|device-row|adapter-combo|toolbar-button|link-button|save-session-button|card|status-chip)[^{]*\{[^}]*((min|max)-(width|height)|padding|border-radius)' app/linux/main.c; then
             echo 'Shared Linux shell geometry must come from LINK, not BMWLINK CSS.' >&2
             exit 1
