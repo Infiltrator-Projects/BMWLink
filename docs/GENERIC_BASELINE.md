@@ -4,7 +4,7 @@ BMWLINK is intentionally not a polished BMW-specific product yet, but it is
 not an empty shell.
 
 The product pins LINK and exposes the same reusable diagnostic foundations used
-by MBLINK and JAGLINK:
+across the LINK family:
 
 - adapter capability modelling and transport ABI;
 - ELM327 protocol/session/CAN/probe engines;
@@ -17,7 +17,8 @@ by MBLINK and JAGLINK:
 - standard parameter definitions, storage and scheduling;
 - telemetry/history/export primitives;
 - generic ECU-probe and diagnostic-flow machinery;
-- shared KWP2000 support where applicable.
+- shared KWP2000 support where applicable; and
+- the shared operator-task application model and common presentation behaviour supplied by LINK.
 
 What is intentionally missing is BMW-specific knowledge: module maps,
 proprietary PIDs/DIDs, manufacturer DTC meanings, security algorithms and
