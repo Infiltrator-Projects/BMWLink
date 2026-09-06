@@ -3,9 +3,7 @@
 #include <TargetConditionals.h>
 #endif
 #if defined(__APPLE__) && TARGET_OS_IOS
-#include "../link/src/uds/uds.c"
-#include "../link/src/uds/uds_services.c"
-#include "../link/src/uds/uds_server.c"
+#include "../link/platform/apple/LinkPortableUds.c"
 #else
 typedef int bmwlink_uds_translation_unit;
 #endif

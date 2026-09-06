@@ -3,10 +3,7 @@
 #include <TargetConditionals.h>
 #endif
 #if defined(__APPLE__) && TARGET_OS_IOS
-#include "../link/src/obd2/obd2.c"
-#include "../link/src/obd2/pid_catalogue.c"
-#include "../link/src/obd2/j1979da.c"
-#include "../link/src/obd2/dtc_knowledge.c"
+#include "../link/platform/apple/LinkPortableObd2.c"
 #else
 typedef int bmwlink_obd2_translation_unit;
 #endif

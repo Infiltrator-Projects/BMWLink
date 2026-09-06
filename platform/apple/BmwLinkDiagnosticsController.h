@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, readonly) NSString *statusText;
 @property(nonatomic, copy, readonly, nullable) NSString *peripheralName;
 @property(nonatomic, copy, readonly, nullable) NSString *adapterIdentifier;
+@property(nonatomic, copy, readonly) NSString *obdProtocolText;
 @property(nonatomic, copy, readonly) NSString *vehicleVINText;
 @property(nonatomic, copy, readonly) NSString *faultScanStatusText;
 @property(nonatomic, copy, readonly) NSArray<NSString *> *storedDTCs;
@@ -35,11 +36,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, readonly) NSArray<NSString *> *availableMeasurementSystemKeys;
 @property(nonatomic, copy, readonly) NSArray<NSString *> *availableMeasurementSystemNames;
 @property(nonatomic, copy, readonly) NSString *selectedMeasurementSystemKey;
+
 - (void)start;
+- (void)startWithPeripheralIdentifier:(NSString *)peripheralIdentifier;
+- (void)startSimulated;
 - (void)disconnect;
 - (NSString *)localizedTextForKey:(NSString *)key;
 - (void)setSelectedLanguageTag:(NSString *)tag;
 - (void)setSelectedMeasurementSystemKey:(NSString *)key;
+- (NSArray<NSNumber *> *)recentValuesForPID:(uint8_t)pid limit:(NSUInteger)limit;
+- (NSArray<NSNumber *> *)displayRecentValuesForPID:(uint8_t)pid limit:(NSUInteger)limit;
+- (NSString *)displayUnitForPID:(uint8_t)pid;
+- (NSArray<NSNumber *> *)displayRangeForPID:(uint8_t)pid;
+- (BOOL)supportsPID:(uint8_t)pid;
+- (BOOL)favouriteForPID:(uint8_t)pid;
+- (void)setFavourite:(BOOL)favourite forPID:(uint8_t)pid;
+- (BOOL)pollingEnabledForPID:(uint8_t)pid;
+- (void)setPollingEnabled:(BOOL)enabled forPID:(uint8_t)pid;
 - (nullable NSData *)csvDataSnapshot;
+- (const LinkDiagnosticFlow *)diagnosticFlow;
 @end
 NS_ASSUME_NONNULL_END
