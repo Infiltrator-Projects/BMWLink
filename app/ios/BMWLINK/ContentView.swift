@@ -401,7 +401,7 @@ private struct ProductSettingsView: View {
             VStack(alignment: .leading, spacing: 15) {
                 LinkLabeledPanel(title: "BMWLINK", systemImage: "gearshape.fill") {
                     ProductValueRow(label: "Version", value: model.versionText, icon: "number.circle")
-                    ProductValueRow(label: "Shared engine", value: "LINK 0.15.4-compatible face", icon: "square.stack.3d.up")
+                    ProductValueRow(label: "Shared engine", value: "LINK \(model.linkVersionText)", icon: "square.stack.3d.up")
                 }
                 LinkLabeledPanel(title: "Language", systemImage: "globe") {
                     Picker("Language", selection: Binding(get: { model.selectedLanguageID }, set: { model.selectLanguage($0) })) {

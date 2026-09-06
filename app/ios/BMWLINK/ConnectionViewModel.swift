@@ -38,6 +38,7 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
     @Published private(set) var isSimulationActive = false
     @Published private(set) var recordedSampleCount = 0
     @Published private(set) var versionText = "Unknown"
+    @Published private(set) var linkVersionText = "Unknown"
     @Published private(set) var csvExportURL: URL?
     @Published private(set) var isPreparingCSV = false
     @Published private(set) var languageTags = [String]()
@@ -53,8 +54,12 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
         legacyProfileKey: nil,
         legacySelectedVINKey: nil,
         legacyAdapterMappingKey: nil)
-    private let pidSelectionStore = LinkPIDSelectionStore(
+    private let dashboardSelectionStore = LinkPIDSelectionStore(
         productNamespace: "bmwlink",
+        legacyGlobalKey: nil,
+        legacyVehicleKey: nil)
+    private let pollingSelectionStore = LinkPIDSelectionStore(
+        productNamespace: "bmwlink-polling",
         legacyGlobalKey: nil,
         legacyVehicleKey: nil)
     private var lastPersistedLiveVIN: String?
@@ -69,8 +74,10 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
 
     override init() {
         super.init()
-        controller.delegate = self
         selectedVehicleVIN = vehicleProfileStore.selectedVehicleVIN
+        seedDefaultPollingSelection()
+        applyStoredPollingPolicy()
+        controller.delegate = self
         if let value = bmwlink_version() { versionText = String(cString: value) }
         refresh()
     }
@@ -140,7 +147,15 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
 
     func togglePolling(_ parameter: LinkDiagnosticParameter) {
         guard let pid = UInt8(exactly: parameter.parameterIdentifier) else { return }
-        controller.setPollingEnabled(!controller.pollingEnabled(forPID: pid), forPID: pid)
+        let enabled = !controller.pollingEnabled(forPID: pid)
+        var enabledKeys = Set(pollingSelectionStore.globalStableKeys)
+        if enabled {
+            enabledKeys.insert(parameter.id)
+        } else {
+            enabledKeys.remove(parameter.id)
+        }
+        pollingSelectionStore.setGlobalStableKeys(Array(enabledKeys).sorted())
+        controller.setPollingEnabled(enabled, forPID: pid)
         refresh()
     }
 
@@ -250,17 +265,46 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
 
     private func refreshDashboardSelection() {
         let supported = diagnosticParameters.filter(\.vehicleSupported)
-        if !pidSelectionStore.hasGlobalSelection {
+        if !dashboardSelectionStore.hasGlobalSelection {
             let preferredPIDs: [UInt32] = [0x0C, 0x0D, 0x05, 0x11, 0x04, 0x0F]
             let preferred = preferredPIDs.compactMap { pid in
                 supported.first(where: { $0.parameterIdentifier == pid })?.id
             }
             let defaults = preferred.isEmpty ? Array(supported.prefix(6).map(\.id)) : preferred
-            if !defaults.isEmpty { pidSelectionStore.setGlobalStableKeys(defaults) }
+            if !defaults.isEmpty { dashboardSelectionStore.setGlobalStableKeys(defaults) }
         }
-        let selected = Set(pidSelectionStore.globalStableKeys)
+        let selected = Set(dashboardSelectionStore.globalStableKeys)
         let chosen = diagnosticParameters.filter { selected.contains($0.id) && $0.vehicleSupported }
         dashboardParameters = chosen.isEmpty ? Array(supported.prefix(6)) : chosen
+    }
+
+    private func allStandardPollingKeys() -> [String] {
+        let count = Int(link_obd2_pid_definition_count())
+        return (0..<count).compactMap { index in
+            guard let definition = link_obd2_pid_definition_at(index) else { return nil }
+            let metadata = definition.pointee
+            guard metadata.mode == 0x01, (metadata.pid & 0x1F) != 0 else { return nil }
+            return String(format: "obd2-01-%02X", metadata.pid)
+        }
+    }
+
+    private func seedDefaultPollingSelection() {
+        guard !pollingSelectionStore.hasGlobalSelection else { return }
+        pollingSelectionStore.setGlobalStableKeys(allStandardPollingKeys())
+    }
+
+    private func applyStoredPollingPolicy() {
+        let enabledKeys = Set(pollingSelectionStore.globalStableKeys)
+        let count = Int(link_obd2_pid_definition_count())
+        for index in 0..<count {
+            guard let definition = link_obd2_pid_definition_at(index) else { continue }
+            let metadata = definition.pointee
+            guard metadata.mode == 0x01, (metadata.pid & 0x1F) != 0 else { continue }
+            let stableKey = String(format: "obd2-01-%02X", metadata.pid)
+            controller.setPollingEnabled(
+                enabledKeys.contains(stableKey),
+                forPID: metadata.pid)
+        }
     }
 
     private func refresh() {
@@ -302,6 +346,7 @@ final class ConnectionViewModel: NSObject, ObservableObject, @preconcurrency Bmw
         measurementKeys = controller.availableMeasurementSystemKeys
         measurementNames = controller.availableMeasurementSystemNames
         selectedMeasurementID = controller.selectedMeasurementSystemKey
+        linkVersionText = controller.linkVersionText
         isActive = active
         isReady = controller.isReady
         diagnosticParameters = loadDiagnosticParameters()

@@ -24,6 +24,7 @@
     return self;
 }
 - (void)dealloc { _shared.delegate = nil; }
+- (NSString *)linkVersionText { return self.shared.linkVersionText; }
 - (NSString *)statusText { return self.shared.statusText; }
 - (NSString *)peripheralName { return self.shared.peripheralName; }
 - (NSString *)adapterIdentifier { return self.shared.adapterIdentifier; }

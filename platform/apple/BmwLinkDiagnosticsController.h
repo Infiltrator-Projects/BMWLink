@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BmwLinkDiagnosticsController : NSObject
 @property(nonatomic, weak, nullable) id<BmwLinkDiagnosticsControllerDelegate> delegate;
+@property(nonatomic, copy, readonly) NSString *linkVersionText;
 @property(nonatomic, copy, readonly) NSString *statusText;
 @property(nonatomic, copy, readonly, nullable) NSString *peripheralName;
 @property(nonatomic, copy, readonly, nullable) NSString *adapterIdentifier;

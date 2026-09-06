@@ -26,6 +26,10 @@ jobs:
           test "$link_sha" = "$(git -C src/link rev-parse HEAD)"
           link_version="$(tr -d '[:space:]' < src/link/VERSION)"
           grep -Fq "#define LINK_VERSION_STRING \"$link_version\"" src/link/include/link/version.h
+          grep -Fq '@property(nonatomic, copy, readonly) NSString *linkVersionText;' src/link/platform/apple/LinkDiagnosticsController.h
+          grep -Fq 'pollingSelectionStore.setGlobalStableKeys' app/ios/BMWLINK/ConnectionViewModel.swift
+          grep -Fq 'linkVersionText = controller.linkVersionText' app/ios/BMWLINK/ConnectionViewModel.swift
+          ! grep -Fq '0.15.4-compatible face' app/ios/BMWLINK/ContentView.swift
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel
       - run: ctest --test-dir build --output-on-failure
