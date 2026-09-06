@@ -54,6 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)pollingEnabledForPID:(uint8_t)pid;
 - (void)setPollingEnabled:(BOOL)enabled forPID:(uint8_t)pid;
 - (nullable NSData *)csvDataSnapshot;
-- (const LinkDiagnosticFlow *)diagnosticFlow;
+- (const LinkDiagnosticFlow * _Nullable)diagnosticFlow;
 @end
 NS_ASSUME_NONNULL_END

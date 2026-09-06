@@ -2,3 +2,4 @@
 #import "../../../platform/apple/BmwLinkDiagnosticsController.h"
 #import "bmwlink/bmwlink.h"
 #include "link/obd2.h"
+#include "link/i18n.h"
