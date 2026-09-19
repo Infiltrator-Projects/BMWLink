@@ -4,7 +4,7 @@ BMWLINK is the BMW-specific member of the LINK diagnostic family.
 
 ## Engineering ethos
 
-What should a BMW diagnostic product add without forking the standards engine beneath it? BMWLINK exists to turn BMW-specific evidence into a product face while keeping generic diagnostic behaviour in the exact pinned LINK dependency.
+What should a BMW diagnostic product built from first principles add without forking the standards engine beneath it? BMWLINK exists to turn BMW-specific evidence into a product face while keeping generic diagnostic behaviour in the exact pinned LINK dependency.
 
 Standard OBD, transport, UDS, sequencing, safety and common application behaviour are not copied into this repository. BMW-specific identities, topology, definitions and verified manufacturer behaviour belong here. External databases, captures, documentation and mature tools are evidence to study; unsupported manufacturer knowledge remains unknown rather than being inferred from another brand or silently guessed.
 
