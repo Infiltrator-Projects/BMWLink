@@ -2,27 +2,34 @@
 
 ## First-principles position
 
-BMWLINK is designed from the behaviour it must own. Existing tools, standards and hosted services are evidence or mechanisms, not specifications to clone or dependencies allowed to redefine project policy.
+BMWLINK is not intended to become a copy of LINK with BMW colours. It should contain exactly the behaviour that is genuinely BMW-specific and rely on the shared engine for everything else.
 
 ## Goals
 
-- remain a thin manufacturer face over LINK
-- add BMW knowledge only from traceable evidence
-- avoid private generic protocol/application copies
-- keep unsupported manufacturer behaviour explicit
+- one shared diagnostic engine across vehicle products;
+- BMW-specific knowledge with explicit provenance;
+- native Linux, Windows and iPhone product faces over the same core;
+- no guessed manufacturer catalogue merely to make the application appear complete;
+- deny-by-default request safety inherited from LINK.
 
-## Non-goals
+## Thin-product rule
 
-Generic OBD success does not constitute BMW-specific coverage, and BMW behaviour is not inferred from another manufacturer simply because the same UDS service exists.
+A manufacturer repository being small is a success when LINK owns the generic capability. Code count is not a measure of maturity.
 
-## Dependency policy
+BMWLINK should grow only when real BMW-specific evidence justifies new identity, topology, parameter, service or procedure knowledge.
 
-Prefer first-party C/C++ implementation for portable/native logic where appropriate and exact pinned first-party shared dependencies for common contracts. External tools/services are acceptable when their interface is useful and replaceable; semantics remain documented and testable in this repository.
+## Language/platform rule
 
-## Failure philosophy
+C/C++ are preferred for first-party native/domain code. Swift and Objective-C are platform-boundary languages on Apple. Toolkit code renders state; it does not redefine diagnostics.
 
-Missing, unsupported, stale and failed are distinct states. The project prefers a visible refusal or unavailable result to manufacturing a plausible success. Destructive/publication/manufacturer actions require stronger evidence than read-only discovery.
+## Evidence rule
 
-## Decision quality
+Generic OBD/UDS behaviour proves standards integration, not BMW manufacturer coverage. A BMW-specific definition requires a traceable source, captured/physical evidence or another documented basis strong enough to support the interpretation.
 
-A design change should identify ownership, alternatives, evidence and validation. Newness alone is not a benefit; a change should improve correctness, resilience, safety, performance, fidelity or maintainability.
+## Failure rule
+
+Unknown BMW values remain raw/unknown. Unsupported manufacturer requests remain unavailable. A decoder being present in LINK does not mean BMWLINK is permitted to send it.
+
+## Shared improvement rule
+
+If BMWLINK needs a capability that is product-neutral, LINK should be improved and BMWLINK should consume it. Private compatibility layers are temporary and should shrink rather than become a second framework.

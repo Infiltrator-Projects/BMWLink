@@ -2,31 +2,52 @@
 
 ## Purpose
 
-BMWLINK is the BMW manufacturer product face over the shared LINK diagnostics engine.
+BMWLINK is the BMW manufacturer product face over the shared LINK diagnostics engine. The repository is intentionally thin: generic automotive behaviour stays in LINK while BMW-specific identity and evidence grow here.
 
-## System decomposition
+## Dependency hierarchy
 
-- BMW product facade
-- exact LINK dependency
-- Linux/iPhone/Windows-facing product surfaces
-- generic diagnostics integration tests
-- BMW-specific knowledge layer as it grows
+```text
+Infiltratr Common
+        ↓
+       LINK
+        ↓
+     BMWLINK
+```
 
-## Ownership boundaries
+The build adds `src/link` and links `bmwlink-core` publicly against `LINK::Core`. BMWLINK does not select an independent Common revision.
 
-LINK owns transports, standards, sequencing, safety and common application behaviour. BMWLINK owns only BMW-specific vehicle identity, topology, definitions and manufacturer interpretation.
+## Product core
 
-Mechanisms supplied by GitHub, APT, an operating system, LINK/Common or a platform toolkit sit behind explicit project-owned policy. The external mechanism must not silently become the source of product meaning.
+`src/bmwlink.c` and public headers under `include/bmwlink/` define product identity and BMW-specific facade behaviour.
 
-## Source of truth
+The repository currently retains small `src/obd2/` and `src/uds/` source areas only where product-owned compatibility/facade code remains; generic standards semantics belong in LINK and should not grow privately here.
 
-Code, tests, pinned dependency/release identities and generated artifacts define executable/publication behaviour. Documentation defines ownership and support boundaries. Specialist files may refine a subsystem but must not contradict this model.
+## Platform faces
 
-## Change discipline
+### Linux
 
-Keep generic behaviour in its shared owner and local behaviour in this repository. Unknown, unavailable and unsupported states stay explicit. Changes to persistent/publication identity require an intentional version or migration decision.
+The optional GTK4 shell is a native product face. It links BMWLINK::Core and uses LINK's shared Linux application/adapter enablement. GTK resources and product identity remain local.
 
-## Specialist documentation
+### Windows
 
-- docs/GENERIC_BASELINE.md
-- docs/OBD2.md
+The Windows Discover executable is created through LINK's shared Discover constructor. BMWLINK supplies product identity, icon and theme overrides, while generic Windows Discover behaviour stays in LINK.
+
+### iPhone
+
+SwiftUI provides presentation. Objective-C transport/controller code bridges Apple platform mechanics to the shared diagnostic core. Apple code must not become a duplicate protocol stack.
+
+## Version identity
+
+The root `VERSION` and public `BMWLINK_VERSION` macro must agree at configure time. Release/platform builds therefore consume one project version.
+
+## Tests
+
+- `test_smoke.c` checks product/version/dependency integration.
+- `test_obd2.c` checks the inherited standards-facing baseline through the product facade.
+- `test_generic_diagnostics.c` checks generic diagnostic flow exposure through BMWLINK.
+
+These tests establish the generic baseline only; they do not constitute BMW-specific module/network qualification.
+
+## Ownership rule
+
+BMW-specific VIN/profile/module/network/definition behaviour belongs here when evidence exists. Until then, the repository remains deliberately thin rather than filling gaps with guessed manufacturer data.

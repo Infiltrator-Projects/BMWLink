@@ -1,29 +1,20 @@
 # Documentation
 
-This directory is the canonical documentation entry point for BMWLINK. The Infiltrator project family uses the same baseline document roles in every repository so readers can move between projects without relearning the structure.
+BMWLINK follows the common Infiltrator documentation baseline.
 
-## Canonical baseline
+- [Architecture](ARCHITECTURE.md) — LINK/product/platform boundaries.
+- [Design](DESIGN.md) — thin-product and evidence philosophy.
+- [Decisions](DECISIONS.md) — durable product choices.
+- [Roadmap](ROADMAP.md) — BMW-specific development direction.
+- [Validation](VALIDATION.md) — generic versus manufacturer evidence.
+- [Project README](../README.md) — product overview.
+- [Changelog](../CHANGELOG.md) — history.
+- [Contributing](../CONTRIBUTING.md) — engineering rules.
+- [Security](../SECURITY.md) — vulnerability policy.
 
-- [Architecture](ARCHITECTURE.md) — ownership, layers, dependencies and system boundaries.
-- [Design](DESIGN.md) — first-principles goals, non-goals, trade-offs and failure philosophy.
-- [Roadmap](ROADMAP.md) — current foundation, near-term priorities and longer-term direction.
-- [Validation](VALIDATION.md) — automated, manual and environment-specific evidence boundaries.
-- [Project README](../README.md) — product overview, capabilities, build/use entry point and engineering ethos.
-- [Changelog](../CHANGELOG.md) — user-visible and contract-relevant change history.
-- [Contributing](../CONTRIBUTING.md) — development, ownership and verification rules.
-- [Security](../SECURITY.md) — vulnerability scope, reporting and response policy.
+Specialist baseline notes:
 
-## Documentation authority
+- [Generic baseline](GENERIC_BASELINE.md)
+- [OBD-II](OBD2.md)
 
-The baseline files have distinct responsibilities and should not compete as alternate sources of truth. Architecture describes where behaviour belongs; Design explains why; Roadmap describes direction; Validation records what evidence is required. Code and tests remain authoritative for executable behaviour, while immutable tags/releases identify historical source.
-
-Specialist documents may go deeper into one subsystem, protocol, platform, research area or historical investigation. They should link back to the canonical baseline when a reader needs the wider project context.
-
-## Specialist documentation
-
-- docs/GENERIC_BASELINE.md — specialist or historical detail retained alongside the canonical baseline.
-- docs/OBD2.md — specialist or historical detail retained alongside the canonical baseline.
-
-## Maintenance rule
-
-When a change moves an ownership boundary, support boundary, validation claim or major design decision, update the corresponding canonical document in the same change. Avoid copying the same status statement into several files; link to the authoritative document instead.
+The small specialist set is intentional until verified BMW-specific evidence exists.
