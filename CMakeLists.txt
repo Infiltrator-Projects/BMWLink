@@ -88,7 +88,7 @@ if(BMWLINK_BUILD_WINDOWS_DISCOVER)
   endif()
   link_add_windows_discover(bmwlink-discover
     PRODUCT_NAME "BMWLINK" PRODUCT_SLUG "bmwlink" WINDOW_CLASS "BMWLINKDiscoverWindow"
-    PRODUCT_VERSION "${PROJECT_VERSION}" PRODUCT_COPYRIGHT "Copyright (C) 2026 Shannon Smith"
+    PRODUCT_VERSION "${PROJECT_VERSION}" PRODUCT_COPYRIGHT "Copyright (C) 2000-2026 Shannon Smith"
     PRODUCT_SUBTITLE "BMW Diagnostics"
     PRODUCT_DESCRIPTION "A C-first, open-source BMW vehicle diagnostics platform."
     PRODUCT_AUTHORS "Shannon Smith"
