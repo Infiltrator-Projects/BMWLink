@@ -1,5 +1,7 @@
 # BMWLINK
 
+**Project copyright:** © 2000–2026 Shannon Smith
+
 BMWLINK is the BMW-specific member of the LINK diagnostic family.
 
 ## Engineering ethos
