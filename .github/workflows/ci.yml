@@ -143,6 +143,16 @@ jobs:
           dpkg-deb -c "$deb" | grep -F './usr/share/applications/bmwlink.desktop' >/dev/null
           dpkg-deb -c "$deb" | grep -F './usr/lib/udev/rules.d/60-bmwlink-openport2.rules' >/dev/null
 
+      - name: Verify native Linux source build
+        shell: bash
+        run: |
+          set -euo pipefail
+          cmake -S . -B build-native -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBMWLINK_BUILD_PROFILE=native -DBUILD_TESTING=OFF
+          cmake --build build-native --parallel
+          rm -rf native-stage
+          DESTDIR="$PWD/native-stage" cmake --install build-native
+          test -x native-stage/usr/bin/bmwlink
+
   windows-gui:
     name: Windows Discover GUI
     runs-on: windows-latest
@@ -179,14 +189,4 @@ jobs:
           xcodebuild -project app/ios/BMWLINK.xcodeproj -scheme BMWLINK -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO \
             MARKETING_VERSION="$version" BMWLINK_SOURCE_REVISION="$GITHUB_SHA" build
-
-      - name: Verify native Linux source build
-        shell: bash
-        run: |
-          set -euo pipefail
-          cmake -S . -B build-native -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBMWLINK_BUILD_PROFILE=native -DBUILD_TESTING=OFF
-          cmake --build build-native --parallel
-          rm -rf native-stage
-          DESTDIR="$PWD/native-stage" cmake --install build-native
-          test -x native-stage/usr/bin/bmwlink
 
