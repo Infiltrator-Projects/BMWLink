@@ -65,3 +65,22 @@ behaviour.
 
 BMW-specific/proprietary vehicle coverage: not claimed yet; it will be added
 here only from evidence-backed BMW data.
+
+
+## Linux installation paths
+
+The Linux application has two supported build paths from the same native C source graph:
+
+```sh
+# Generic distributable build used for the published .deb
+cmake -S . -B build-generic -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBMWLINK_BUILD_PROFILE=generic
+cmake --build build-generic --parallel
+cpack --config build-generic/CPackConfig.cmake -G DEB
+
+# Hardware-native local source build
+cmake -S . -B build-native -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DBMWLINK_BUILD_LINUX_GUI=ON -DBMWLINK_BUILD_PROFILE=native
+cmake --build build-native --parallel
+sudo cmake --install build-native
+```
+
+The generic profile is the release/packaging contract. The native profile compiles the same implementation locally and enables compiler CPU tuning for the machine doing the build.
