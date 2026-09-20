@@ -378,7 +378,7 @@ int main(int argc, char **argv)
         .version = bmwlink_version(),
         .description = "A C-first, open-source BMW vehicle diagnostics platform authored by Shannon Smith.",
         .authors = "Shannon Smith",
-        .copyright = "Copyright © 2000-2026 Shannon Smith",
+        .copyright = "Copyright © 1993-2026 Shannon Smith",
         .website = "https://github.com/Infiltrator-Projects/BMWLINK",
         .license_name = "GPL-3.0-or-later",
         .license_text =
