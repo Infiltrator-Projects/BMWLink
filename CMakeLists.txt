@@ -71,6 +71,8 @@ if(BMWLINK_BUILD_LINUX_GUI)
   add_executable(bmwlink app/linux/main.c "${BMWLINK_LINUX_RESOURCE_SOURCE}")
   set_source_files_properties("${BMWLINK_LINUX_RESOURCE_SOURCE}" PROPERTIES COMPILE_OPTIONS "-w")
   target_link_libraries(bmwlink PRIVATE BMWLINK::Core PkgConfig::GTK4)
+  target_compile_definitions(bmwlink PRIVATE
+    BMWLINK_BUILD_PROFILE_ID="${BMWLINK_BUILD_PROFILE}")
   link_enable_linux_gtk_shell(bmwlink UDEV_RULE_NAME "60-bmwlink-openport2.rules")
   install(TARGETS bmwlink RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
   install(FILES app/linux/assets/bmwlink-emblem.png DESTINATION "${CMAKE_INSTALL_DATADIR}/pixmaps" RENAME bmwlink.png)

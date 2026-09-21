@@ -5,6 +5,7 @@
 #include "link/workspace.h"
 #include "link/obd2.h"
 #include <gtk/gtk.h>
+#include <infiltratr/core.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -377,6 +378,7 @@ int main(int argc, char **argv)
         .subtitle = "BMW · LINK DIAGNOSTICS",
         .version = bmwlink_version(),
         .description = "A C-first, open-source BMW vehicle diagnostics platform authored by Shannon Smith.",
+        .build = infiltratr_build_profile_label(BMWLINK_BUILD_PROFILE_ID),
         .authors = "Shannon Smith",
         .copyright = "Copyright © 1993-2026 Shannon Smith",
         .website = "https://github.com/Infiltrator-Projects/BMWLINK",
