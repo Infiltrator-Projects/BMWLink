@@ -2,7 +2,7 @@
 
 ## 0.2.21 — 2026-09-21
 
-- Standardise About presentation on the suite-wide System Monitor contract through LINK 0.15.39.
+- Standardise About presentation on the suite-wide System Monitor contract through LINK 0.15.40.
 - Expose the canonical build identity as its own About field on Linux; the LINK-owned standard iOS face now carries the same Build field automatically.
 - Keep product branding in the application shell while LINK owns About geometry and Website/Credits/Licence/Close semantics.
 
