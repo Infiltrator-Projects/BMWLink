@@ -2,7 +2,7 @@
 #ifndef BMWLINK_H
 #define BMWLINK_H
 #ifndef BMWLINK_VERSION
-#define BMWLINK_VERSION "0.2.24"
+#define BMWLINK_VERSION "0.2.25"
 #endif
 #define BMWLINK_BRAND "BMW"
 const char *bmwlink_product_name(void);
