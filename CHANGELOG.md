@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.26 — 2026-09-23
+
+- Advance BMWLINK to released LINK 0.15.61 at `2e212f67e5a664330d432a6798350202be54eb10`, consuming the canonical nested Infiltratr Common 1.19.24 pin.
+- Requalify the existing manufacturer-specific product surface against the current shared LINK/Common dependency chain without broadening diagnostic permissions or inventing manufacturer behaviour.
+
 ## 0.2.25 — 2026-09-22
 
 - Advance BMWLINK to LINK 0.15.55 at 0caaf4026dcf, retaining the Infiltratr Common 1.19.23 pin and corrected dependency metadata.
