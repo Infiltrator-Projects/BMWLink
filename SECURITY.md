@@ -10,7 +10,7 @@ Do not publish a vulnerability that could expose users, vehicles, credentials, p
 
 Use GitHub private vulnerability reporting/security advisories when available. Include:
 
-- exact BMWLINK revision and LINK dependency identity;
+- exact BMWLink revision and Link dependency identity;
 - platform and adapter;
 - vehicle/model/module context when relevant;
 - impact and reliable reproduction;
@@ -39,7 +39,7 @@ Testing must not endanger people, vehicles or third-party systems. Potentially s
 
 Treat security defects as correctness defects. Reproduce at the narrowest safe layer, add regression coverage where practical, fix the owning contract and validate physical hardware when the failure crosses that boundary.
 
-A defect in generic LINK behaviour should be fixed in LINK and then consumed by BMWLINK; do not hide it with a product-only workaround unless necessary as an explicit temporary mitigation.
+A defect in generic Link behaviour should be fixed in Link and then consumed by BMWLink; do not hide it with a product-only workaround unless necessary as an explicit temporary mitigation.
 
 ## Disclosure
 

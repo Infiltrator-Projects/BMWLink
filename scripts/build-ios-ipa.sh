@@ -41,11 +41,11 @@ xcodebuild \
 
 app="$derived/Build/Products/Release-iphoneos/BMWLINK.app"
 test -d "$app"
-test -x "$app/BMWLINK"
-/usr/bin/lipo -info "$app/BMWLINK" | grep -q arm64
+test -x "$app/BMWLink"
+/usr/bin/lipo -info "$app/BMWLink" | grep -q arm64
 
 if [[ -z "$out_name" ]]; then
-  out_name="BMWLINK-${version}-unsigned.ipa"
+  out_name="BMWLink-${version}-unsigned.ipa"
 fi
 ipa="$out_dir/$out_name"
 mkdir -p "$package/Payload"

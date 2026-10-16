@@ -1,20 +1,20 @@
 # Decisions
 
-## ADR-001 — BMWLINK remains a thin LINK product face
+## ADR-001 — BMWLink remains a thin Link product face
 
-**Decision.** Generic protocol, sequencing, safety and application behaviour stays in LINK.
+**Decision.** Generic protocol, sequencing, safety and application behaviour stays in Link.
 
 **Rationale.** Product copies would diverge and make safety fixes inconsistent.
 
-**Consequence.** BMWLINK grows mainly through BMW-specific knowledge.
+**Consequence.** BMWLink grows mainly through BMW-specific knowledge.
 
-## ADR-002 — One LINK dependency defines shared behaviour
+## ADR-002 — One Link dependency defines shared behaviour
 
-**Decision.** BMWLINK links directly against the exact pinned LINK source and does not choose Common independently.
+**Decision.** BMWLink links directly against the exact pinned Link source and does not choose Common independently.
 
 **Rationale.** A single dependency chain makes releases reproducible and avoids mixed shared-library assumptions.
 
-**Consequence.** Dependency changes are reviewed by changing the LINK gitlink.
+**Consequence.** Dependency changes are reviewed by changing the Link gitlink.
 
 ## ADR-003 — Manufacturer gaps remain explicit
 

@@ -1,14 +1,14 @@
-# Contributing to BMWLINK
+# Contributing to BMWLink
 
-BMWLINK is a manufacturer product face over the shared LINK diagnostics engine. Contributions must preserve the dependency direction **Common → LINK → BMWLINK** and keep product-neutral diagnostics out of this repository.
+BMWLink is a manufacturer product face over the shared Link diagnostics engine. Contributions must preserve the dependency direction **Common → Link → BMWLink** and keep product-neutral diagnostics out of this repository.
 
 ## Ownership
 
 - Common owns broadly reusable non-automotive primitives.
-- LINK owns generic transports, OBD, ISO-TP, UDS/KWP/DoIP, diagnostic sequencing, evidence/safety policy and common application behaviour.
-- BMWLINK owns BMW-specific identity, network/module knowledge, verified definitions, product presentation and genuinely manufacturer-specific behaviour.
-- If a change is useful across manufacturers, improve LINK rather than creating a private BMWLINK copy.
-- Do not modify the nested LINK/Common source from this repository as a substitute for updating the dependency deliberately.
+- Link owns generic transports, OBD, ISO-TP, UDS/KWP/DoIP, diagnostic sequencing, evidence/safety policy and common application behaviour.
+- BMWLink owns BMW-specific identity, network/module knowledge, verified definitions, product presentation and genuinely manufacturer-specific behaviour.
+- If a change is useful across manufacturers, improve Link rather than creating a private BMWLink copy.
+- Do not modify the nested Link/Common source from this repository as a substitute for updating the dependency deliberately.
 
 ## Languages and platform boundaries
 
@@ -37,7 +37,7 @@ cmake --build build --parallel
 ctest --test-dir build --output-on-failure
 ```
 
-Product changes should keep LINK's own shared test suite healthy through the pinned dependency and add BMWLINK-level tests for manufacturer semantics introduced here.
+Product changes should keep Link's own shared test suite healthy through the pinned dependency and add BMWLink-level tests for manufacturer semantics introduced here.
 
 ## Documentation
 
@@ -47,7 +47,7 @@ Do not inflate documentation with guessed manufacturer coverage merely to match 
 
 ## Repository policy
 
-`main` is the working development/release branch. Published tags/releases are immutable. The exact BMWLINK source and LINK gitlink together define a tested product revision.
+`main` is the working development/release branch. Published tags/releases are immutable. The exact BMWLink source and Link gitlink together define a tested product revision.
 
 ## Licence
 

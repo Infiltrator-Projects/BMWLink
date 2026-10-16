@@ -1,9 +1,9 @@
 # Documentation
 
-BMWLINK follows the common Infiltrator documentation baseline.
+BMWLink follows the common Infiltrator documentation baseline.
 
 - [Engineering philosophy](PHILOSOPHY.md) — governing engineering and documentation standard.
-- [Architecture](ARCHITECTURE.md) — LINK/product/platform boundaries.
+- [Architecture](ARCHITECTURE.md) — Link/product/platform boundaries.
 - [Design](DESIGN.md) — thin-product and evidence philosophy.
 - [Decisions](DECISIONS.md) — durable product choices.
 - [Roadmap](ROADMAP.md) — BMW-specific development direction.

@@ -13,7 +13,7 @@
         liveStatusText:@"Live diagnostics active"
         simulatedLiveStatusText:@"Simulated diagnostics active"
         standardVINStatusText:@"Reading standard VIN"
-        simulatedAdapterIdentifier:@"ELM327 v2.3 BMWLINK SIM"
+        simulatedAdapterIdentifier:@"ELM327 v2.3 BMWLink SIM"
         simulatedVIN:@"WBA3A5C50DF123456"];
     return self;
 }

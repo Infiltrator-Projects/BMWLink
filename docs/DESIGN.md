@@ -2,7 +2,7 @@
 
 ## First-principles position
 
-BMWLINK is not intended to become a copy of LINK with BMW colours. It should contain exactly the behaviour that is genuinely BMW-specific and rely on the shared engine for everything else.
+BMWLink is not intended to become a copy of Link with BMW colours. It should contain exactly the behaviour that is genuinely BMW-specific and rely on the shared engine for everything else.
 
 ## Goals
 
@@ -10,13 +10,13 @@ BMWLINK is not intended to become a copy of LINK with BMW colours. It should con
 - BMW-specific knowledge with explicit provenance;
 - native Linux, Windows and iPhone product faces over the same core;
 - no guessed manufacturer catalogue merely to make the application appear complete;
-- deny-by-default request safety inherited from LINK.
+- deny-by-default request safety inherited from Link.
 
 ## Thin-product rule
 
-A manufacturer repository being small is a success when LINK owns the generic capability. Code count is not a measure of maturity.
+A manufacturer repository being small is a success when Link owns the generic capability. Code count is not a measure of maturity.
 
-BMWLINK should grow only when real BMW-specific evidence justifies new identity, topology, parameter, service or procedure knowledge.
+BMWLink should grow only when real BMW-specific evidence justifies new identity, topology, parameter, service or procedure knowledge.
 
 ## Language/platform rule
 
@@ -28,8 +28,8 @@ Generic OBD/UDS behaviour proves standards integration, not BMW manufacturer cov
 
 ## Failure rule
 
-Unknown BMW values remain raw/unknown. Unsupported manufacturer requests remain unavailable. A decoder being present in LINK does not mean BMWLINK is permitted to send it.
+Unknown BMW values remain raw/unknown. Unsupported manufacturer requests remain unavailable. A decoder being present in Link does not mean BMWLink is permitted to send it.
 
 ## Shared improvement rule
 
-If BMWLINK needs a capability that is product-neutral, LINK should be improved and BMWLINK should consume it. Private compatibility layers are temporary and should shrink rather than become a second framework.
+If BMWLink needs a capability that is product-neutral, Link should be improved and BMWLink should consume it. Private compatibility layers are temporary and should shrink rather than become a second framework.

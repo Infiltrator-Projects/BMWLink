@@ -20,7 +20,7 @@ final class ConnectionViewModel: LinkStandardProductViewModel,
         super.init(
             controller: controller,
             configuration: LinkStandardProductConfiguration(
-                productName: "BMWLINK",
+                productName: "BMWLink",
                 productNamespace: "bmwlink",
                 manufacturerName: "BMW",
                 vehicleName: "BMW vehicle",

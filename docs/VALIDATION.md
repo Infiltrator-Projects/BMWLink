@@ -2,7 +2,7 @@
 
 ## Current automated evidence
 
-BMWLINK CI builds the product against its exact LINK dependency and exercises three direct C tests:
+BMWLink CI builds the product against its exact Link dependency and exercises three direct C tests:
 
 - product/version smoke integration;
 - standard OBD-II exposure;
@@ -12,7 +12,7 @@ Platform workflows additionally compile/package the product faces defined by the
 
 ## What this proves
 
-The current suite proves that BMWLINK remains a valid product facade over LINK and that the generic standards path is exposed correctly.
+The current suite proves that BMWLink remains a valid product facade over Link and that the generic standards path is exposed correctly.
 
 It does **not** prove manufacturer-specific BMW module topology, proprietary parameters, enhanced procedures or compatibility with a particular physical vehicle.
 
@@ -27,7 +27,7 @@ A generic UDS expectation without BMW evidence is not enough to name or enable a
 
 ## Safety evidence
 
-BMWLINK inherits LINK's request/safety engine. Any BMW-specific request allowlist or enhanced action added here must gain product-level regression coverage proving its permitted scope.
+BMWLink inherits Link's request/safety engine. Any BMW-specific request allowlist or enhanced action added here must gain product-level regression coverage proving its permitted scope.
 
 ## Physical validation
 
@@ -35,7 +35,7 @@ BLE/J2534/vehicle behaviour ultimately requires real adapters and BMW vehicles. 
 
 ## Release criterion
 
-The exact product source and LINK gitlink must pass the required build/test/release gates. Documentation must distinguish generic baseline from BMW-specific verified capability.
+The exact product source and Link gitlink must pass the required build/test/release gates. Documentation must distinguish generic baseline from BMW-specific verified capability.
 
 ## Qualified publication
 

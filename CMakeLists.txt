@@ -81,7 +81,7 @@ if(BMWLINK_BUILD_LINUX_GUI)
   set(CPACK_GENERATOR "DEB")
   set(CPACK_PACKAGE_NAME "bmwlink")
   set(CPACK_PACKAGE_VENDOR "Infiltrator Projects")
-  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "BMW diagnostics GUI using LINK")
+  set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "BMW diagnostics GUI using Link")
   set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
   set(CPACK_PACKAGE_CONTACT "Infiltrator Projects")
   set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
@@ -99,13 +99,13 @@ if(BMWLINK_BUILD_WINDOWS_DISCOVER)
     message(FATAL_ERROR "BMWLINK_BUILD_WINDOWS_DISCOVER is Windows-only")
   endif()
   link_add_windows_discover(bmwlink-discover
-    PRODUCT_NAME "BMWLINK" PRODUCT_SLUG "bmwlink" WINDOW_CLASS "BMWLINKDiscoverWindow"
+    PRODUCT_NAME "BMWLink" PRODUCT_SLUG "bmwlink" WINDOW_CLASS "BMWLINKDiscoverWindow"
     PRODUCT_VERSION "${PROJECT_VERSION}" PRODUCT_COPYRIGHT "Copyright (C) 1993-2026 Shannon Smith"
     PRODUCT_SUBTITLE "BMW Diagnostics"
     PRODUCT_DESCRIPTION "A C-first, open-source BMW vehicle diagnostics platform."
     PRODUCT_AUTHORS "Shannon Smith"
     PRODUCT_LICENSE_NAME "GPL-3.0-or-later"
-    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLINK"
+    PRODUCT_WEBSITE "https://github.com/Infiltrator-Projects/BMWLink"
     PRODUCT_ICON_PNG "${CMAKE_CURRENT_SOURCE_DIR}/app/ios/BMWLINK/Assets.xcassets/AppIcon.appiconset/AppIcon-60@3x.png")
   target_link_libraries(bmwlink-discover PRIVATE BMWLINK::Core)
   if(MSVC)

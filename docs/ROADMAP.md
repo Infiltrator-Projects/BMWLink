@@ -2,9 +2,9 @@
 
 ## Current foundation
 
-- exact LINK dependency and BMWLINK::Core facade;
+- exact Link dependency and BMWLink::Core facade;
 - Linux GTK4 product shell;
-- shared LINK Windows Discover face with BMW identity;
+- shared Link Windows Discover face with BMW identity;
 - native SwiftUI/iPhone face with Apple bridge;
 - generic OBD and diagnostic integration tests;
 - release/version consistency checks.
@@ -13,8 +13,8 @@
 
 - acquire and document BMW-specific vehicle/module/network evidence;
 - add BMW-specific tests at the same time as BMW-specific implementation;
-- remove any remaining local generic OBD/UDS compatibility code when LINK fully owns the equivalent contract;
-- preserve shared navigation/safety behaviour from LINK.
+- remove any remaining local generic OBD/UDS compatibility code when Link fully owns the equivalent contract;
+- preserve shared navigation/safety behaviour from Link.
 
 ## Longer-term direction
 

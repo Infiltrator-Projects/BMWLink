@@ -26,6 +26,6 @@ int main(void)
     CHECK(strcmp(dtc, "P0133") == 0);
     CHECK(bmwlink_obd2_obdonuds_pid_to_did(0x000cU, &did) == BMWLINK_OBD2_RESULT_OK);
     CHECK(did == 0xf40cU);
-    puts("BMWLINK inherited standard OBD-II baseline passed");
+    puts("BMWLink inherited standard OBD-II baseline passed");
     return 0;
 }

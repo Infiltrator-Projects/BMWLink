@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-name: BMWLINK Release
+name: BMWLink Release
 on:
   workflow_run:
-    workflows: ["BMWLINK CI"]
+    workflows: ["BMWLink CI"]
     types: [completed]
 permissions:
   contents: read
@@ -62,20 +62,20 @@ jobs:
             (cd release && sha256sum -c "SHA256SUMS-$platform")
           done
           expected=$(printf '%s\n' \
-            "BMWLINK-$version-source.zip" "BMWLINK-$version-linux-amd64.deb" \
-            "BMWLINK-$version-windows-discover.exe" "BMWLINK-$version-unsigned.ipa" | sort)
+            "BMWLink-$version-source.zip" "BMWLink-$version-linux-amd64.deb" \
+            "BMWLink-$version-windows-discover.exe" "BMWLink-$version-unsigned.ipa" | sort)
           actual=$(find release -maxdepth 1 -type f ! -name 'SOURCE_COMMIT-*' ! -name 'SHA256SUMS-*' -printf '%f\n' | sort)
           test "$actual" = "$expected"
-          test "$(dpkg-deb -f "release/BMWLINK-$version-linux-amd64.deb" Package)" = bmwlink
-          test "$(dpkg-deb -f "release/BMWLINK-$version-linux-amd64.deb" Version)" = "$version"
-          unzip -tq "release/BMWLINK-$version-source.zip"
-          unzip -tq "release/BMWLINK-$version-unsigned.ipa"
+          test "$(dpkg-deb -f "release/BMWLink-$version-linux-amd64.deb" Package)" = bmwlink
+          test "$(dpkg-deb -f "release/BMWLink-$version-linux-amd64.deb" Version)" = "$version"
+          unzip -tq "release/BMWLink-$version-source.zip"
+          unzip -tq "release/BMWLink-$version-unsigned.ipa"
           rm release/SOURCE_COMMIT-* release/SHA256SUMS-*
-          (cd release && sha256sum BMWLINK-* > SHA256SUMS.txt)
+          (cd release && sha256sum BMWLink-* > SHA256SUMS.txt)
           state=$(gh release view "$tag" --json isDraft,targetCommitish --jq '[.isDraft,.targetCommitish] | @tsv' 2>/dev/null || true)
           if [[ -z "$state" ]]; then
             gh release create "$tag" --target "$EXPECTED_SHA" --draft \
-              --title "BMWLINK $version" \
+              --title "BMWLink $version" \
               --notes "Qualified Linux, Windows and unsigned iPhone artifacts from $EXPECTED_SHA."
             draft=true
           else

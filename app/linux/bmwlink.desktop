@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=BMWLINK
+Name=BMWLink
 Comment=BMW vehicle diagnostics
 Exec=bmwlink
 Icon=bmwlink

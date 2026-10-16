@@ -2,35 +2,35 @@
 
 ## Purpose
 
-BMWLINK is the BMW manufacturer product face over the shared LINK diagnostics engine. The repository is intentionally thin: generic automotive behaviour stays in LINK while BMW-specific identity and evidence grow here.
+BMWLink is the BMW manufacturer product face over the shared Link diagnostics engine. The repository is intentionally thin: generic automotive behaviour stays in Link while BMW-specific identity and evidence grow here.
 
 ## Dependency hierarchy
 
 ```text
-Infiltratr Common
+Libraries
         ↓
-       LINK
+       Link
         ↓
-     BMWLINK
+     BMWLink
 ```
 
-The build adds `src/link` and links `bmwlink-core` publicly against `LINK::Core`. BMWLINK does not select an independent Common revision.
+The build adds `src/link` and links `bmwlink-core` publicly against `Link::Core`. BMWLink does not select an independent Common revision.
 
 ## Product core
 
 `src/bmwlink.c` and public headers under `include/bmwlink/` define product identity and BMW-specific facade behaviour.
 
-The repository currently retains small `src/obd2/` and `src/uds/` source areas only where product-owned compatibility/facade code remains; generic standards semantics belong in LINK and should not grow privately here.
+The repository currently retains small `src/obd2/` and `src/uds/` source areas only where product-owned compatibility/facade code remains; generic standards semantics belong in Link and should not grow privately here.
 
 ## Platform faces
 
 ### Linux
 
-The optional GTK4 shell is a native product face. It links BMWLINK::Core and uses LINK's shared Linux application/adapter enablement. GTK resources and product identity remain local.
+The optional GTK4 shell is a native product face. It links BMWLink::Core and uses Link's shared Linux application/adapter enablement. GTK resources and product identity remain local.
 
 ### Windows
 
-The Windows Discover executable is created through LINK's shared Discover constructor. BMWLINK supplies product identity, icon and theme overrides, while generic Windows Discover behaviour stays in LINK.
+The Windows Discover executable is created through Link's shared Discover constructor. BMWLink supplies product identity, icon and theme overrides, while generic Windows Discover behaviour stays in Link.
 
 ### iPhone
 
@@ -44,7 +44,7 @@ The root `VERSION` and public `BMWLINK_VERSION` macro must agree at configure ti
 
 - `test_smoke.c` checks product/version/dependency integration.
 - `test_obd2.c` checks the inherited standards-facing baseline through the product facade.
-- `test_generic_diagnostics.c` checks generic diagnostic flow exposure through BMWLINK.
+- `test_generic_diagnostics.c` checks generic diagnostic flow exposure through BMWLink.
 
 These tests establish the generic baseline only; they do not constitute BMW-specific module/network qualification.
 
@@ -54,4 +54,4 @@ BMW-specific VIN/profile/module/network/definition behaviour belongs here when e
 
 ## Build boundaries
 
-`BUILD_TESTING` is the caller-owned CMake switch. The product registers its own tests only when enabled and never rewrites that cache setting while adding LINK. LINK owns its test policy independently. Apple packages receive the actual checked-out LINK commit through `LINK_SOURCE_REVISION`; a direct Xcode build without that input reports an unavailable revision instead of a stale hard-coded SHA. Manufacturer code and identity remain product-owned.
+`BUILD_TESTING` is the caller-owned CMake switch. The product registers its own tests only when enabled and never rewrites that cache setting while adding Link. Link owns its test policy independently. Apple packages receive the actual checked-out Link commit through `LINK_SOURCE_REVISION`; a direct Xcode build without that input reports an unavailable revision instead of a stale hard-coded SHA. Manufacturer code and identity remain product-owned.

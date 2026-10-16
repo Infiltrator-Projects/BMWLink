@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/github/Infiltrator-Projects/BMWLINK">
+  <gresource prefix="/com/github/Infiltrator-Projects/BMWLink">
     <file alias="bmwlink-emblem.png">assets/bmwlink-emblem.png</file>
   </gresource>
 </gresources>

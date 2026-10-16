@@ -54,6 +54,6 @@ int main(void)
     bmwlink_telemetry_store_init(&telemetry);
     CHECK(bmwlink_telemetry_store_history_count(&telemetry) == 0U);
 
-    puts("BMWLINK generic LINK diagnostics baseline passed");
+    puts("BMWLink generic Link diagnostics baseline passed");
     return 0;
 }

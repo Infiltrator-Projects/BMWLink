@@ -9,6 +9,6 @@
 #include "link/platform/apple/LinkPortableCore.c"
 #endif
 
-const char *bmwlink_product_name(void){return "BMWLINK";}
+const char *bmwlink_product_name(void){return "BMWLink";}
 const char *bmwlink_brand_name(void){return "BMW";}
 const char *bmwlink_version(void){return BMWLINK_VERSION;}
