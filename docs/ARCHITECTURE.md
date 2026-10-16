@@ -51,3 +51,7 @@ These tests establish the generic baseline only; they do not constitute BMW-spec
 ## Ownership rule
 
 BMW-specific VIN/profile/module/network/definition behaviour belongs here when evidence exists. Until then, the repository remains deliberately thin rather than filling gaps with guessed manufacturer data.
+
+## Build boundaries
+
+`BUILD_TESTING` is the caller-owned CMake switch. The product registers its own tests only when enabled and never rewrites that cache setting while adding LINK. LINK owns its test policy independently. Apple packages receive the actual checked-out LINK commit through `LINK_SOURCE_REVISION`; a direct Xcode build without that input reports an unavailable revision instead of a stale hard-coded SHA. Manufacturer code and identity remain product-owned.

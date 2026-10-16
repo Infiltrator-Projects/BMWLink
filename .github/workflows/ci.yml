@@ -44,6 +44,31 @@ jobs:
       - run: cmake --build build --parallel
       - run: ctest --test-dir build --output-on-failure
 
+      - name: Seal qualified core candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(tr -d '[:space:]' < VERSION)
+          out="$RUNNER_TEMP/qualified-core"
+          source_root=$(mktemp -d)
+          staging="$source_root/BMWLINK-$version"
+          trap 'rm -rf "$source_root"' EXIT
+          mkdir -p "$out" "$staging"
+          git archive HEAD | tar -x -C "$staging"
+          export ARCHIVE_ROOT="$staging"
+          git submodule foreach --recursive 'mkdir -p "$ARCHIVE_ROOT/$displaypath"; git archive HEAD | tar -x -C "$ARCHIVE_ROOT/$displaypath"'
+          (cd "$source_root" && zip -qry "$out/BMWLINK-$version-source.zip" "BMWLINK-$version")
+          unzip -tq "$out/BMWLINK-$version-source.zip"
+          
+          printf '%s\n' "$GITHUB_SHA" > "$out/SOURCE_COMMIT-core"
+          (cd "$out" && sha256sum BMWLINK-* > SHA256SUMS-core)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-core
+          path: ${{ runner.temp }}/qualified-core/*
+          if-no-files-found: error
+          retention-days: 30
+
   linux-gui:
     name: Linux GTK4 GUI
     runs-on: ubuntu-24.04
@@ -155,9 +180,32 @@ jobs:
           DESTDIR="$PWD/native-stage" cmake --install build-native
           test -x native-stage/usr/bin/bmwlink
 
+      - name: Seal qualified linux candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(tr -d '[:space:]' < VERSION)
+          out="$RUNNER_TEMP/qualified-linux"
+          mkdir -p "$out"
+          shopt -s nullglob
+          packages=("$RUNNER_TEMP/cpack/"*.deb)
+          test "${#packages[@]}" -eq 1
+          test "$(dpkg-deb -f "${packages[0]}" Package)" = bmwlink
+          test "$(dpkg-deb -f "${packages[0]}" Version)" = "$version"
+          install -m 0644 "${packages[0]}" "$out/BMWLINK-$version-linux-amd64.deb"
+          
+          printf '%s\n' "$GITHUB_SHA" > "$out/SOURCE_COMMIT-linux"
+          (cd "$out" && sha256sum BMWLINK-* > SHA256SUMS-linux)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-linux
+          path: ${{ runner.temp }}/qualified-linux/*
+          if-no-files-found: error
+          retention-days: 30
+
   windows-gui:
     name: Windows Discover GUI
-    runs-on: [self-hosted, Windows, ARM64]
+    runs-on: windows-2022
     timeout-minutes: 20
     defaults:
       run:
@@ -165,27 +213,6 @@ jobs:
     env:
       PSExecutionPolicyPreference: RemoteSigned
     steps:
-      - name: Discover Windows build tools and Git Bash
-        if: runner.os == 'Windows' && runner.environment == 'self-hosted'
-        shell: powershell
-        run: |
-          $git = (Get-Command git.exe -ErrorAction Stop).Source
-          $gitRoot = Split-Path (Split-Path $git -Parent) -Parent
-          $dirs = @((Join-Path $gitRoot 'bin'), (Join-Path $gitRoot 'usr\bin'), (Join-Path $env:ProgramFiles 'CMake\bin'))
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          if (Test-Path $vswhere) {
-            $vs = & $vswhere -latest -products '*' -property installationPath
-            if ($vs) { $dirs += Join-Path $vs 'Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin' }
-          }
-          foreach ($dir in $dirs) {
-            if (Test-Path $dir) {
-              $dir | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
-              $env:PATH = "$dir;$env:PATH"
-            }
-          }
-          Get-ExecutionPolicy -List
-          cmake --version
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           submodules: recursive
@@ -198,6 +225,25 @@ jobs:
       - name: Prove GUI launches
         shell: powershell
         run: "& 'src/link/platform/windows/smoke-launch.ps1' -Executable 'build-win32/Release/bmwlink-discover.exe' -ExpectedTitle 'BMWLINK Discover'"
+
+      - name: Seal qualified windows candidate
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = (Get-Content VERSION -Raw).Trim()
+          $out = Join-Path $env:RUNNER_TEMP 'qualified-windows'
+          New-Item -ItemType Directory -Force $out | Out-Null
+          $name = "BMWLINK-$version-windows-discover.exe"
+          Copy-Item 'build-win32/Release/bmwlink-discover.exe' (Join-Path $out $name)
+          $hash = (Get-FileHash (Join-Path $out $name) -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$hash  $name" | Set-Content (Join-Path $out 'SHA256SUMS-windows') -Encoding ascii -NoNewline
+          $env:GITHUB_SHA | Set-Content (Join-Path $out 'SOURCE_COMMIT-windows') -Encoding ascii -NoNewline
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-windows
+          path: ${{ runner.temp }}/qualified-windows/*
+          if-no-files-found: error
+          retention-days: 30
 
   iphone-gui:
     name: iPhone SwiftUI GUI
@@ -216,4 +262,22 @@ jobs:
           test "$project_versions" = "$version"
           xcodebuild -project app/ios/BMWLINK.xcodeproj -scheme BMWLINK -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO \
-            MARKETING_VERSION="$version" BMWLINK_SOURCE_REVISION="$GITHUB_SHA" build
+            MARKETING_VERSION="$version" BMWLINK_SOURCE_REVISION="$GITHUB_SHA" LINK_SOURCE_REVISION="$(git -C src/link rev-parse HEAD)" build
+
+      - name: Seal qualified iphone candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(tr -d '[:space:]' < VERSION)
+          out="$RUNNER_TEMP/qualified-iphone"
+          mkdir -p "$out"
+          bash scripts/build-ios-ipa.sh "$RUNNER_TEMP/iphone-build"
+          cp "$RUNNER_TEMP/iphone-build/BMWLINK-$version-unsigned.ipa" "$out/"
+          printf '%s\n' "$GITHUB_SHA" > "$out/SOURCE_COMMIT-iphone"
+          (cd "$out" && shasum -a 256 BMWLINK-* > SHA256SUMS-iphone)
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: qualified-iphone
+          path: ${{ runner.temp }}/qualified-iphone/*
+          if-no-files-found: error
+          retention-days: 30

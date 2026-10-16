@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.27 — 2026-10-16
+
+CI now qualifies and seals the source archive, Linux package, Windows executable and unsigned iPhone package. Publication consumes those exact artifacts, verifies commit/hash identity and compares draft and public bytes. Windows x86 launch qualification runs on a clean x64 runner.
+
 ## 0.2.26 — 2026-09-23
 
 - Advance BMWLINK to released LINK 0.15.62 at `0f2cc710fb8f211013cd5f55df390fe0911886da`, consuming the canonical nested Infiltratr Common 1.19.24 pin and the guarded STM32 UDS RX fallback.
