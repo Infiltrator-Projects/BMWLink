@@ -25,8 +25,8 @@ package="$(mktemp -d "${TMPDIR:-/tmp}/bmwlink-payload.XXXXXX")"
 trap 'rm -rf "$derived" "$package"' EXIT
 
 xcodebuild \
-  -project "$repo_root/app/ios/BMWLINK.xcodeproj" \
-  -scheme BMWLINK \
+  -project "$repo_root/app/ios/BMWLink.xcodeproj" \
+  -scheme BMWLink \
   -configuration Release \
   -sdk iphoneos \
   -destination 'generic/platform=iOS' \
@@ -39,7 +39,7 @@ xcodebuild \
   CODE_SIGN_IDENTITY='' \
   build
 
-app="$derived/Build/Products/Release-iphoneos/BMWLINK.app"
+app="$derived/Build/Products/Release-iphoneos/BMWLink.app"
 test -d "$app"
 test -x "$app/BMWLink"
 /usr/bin/lipo -info "$app/BMWLink" | grep -q arm64
@@ -49,7 +49,7 @@ if [[ -z "$out_name" ]]; then
 fi
 ipa="$out_dir/$out_name"
 mkdir -p "$package/Payload"
-/usr/bin/ditto "$app" "$package/Payload/BMWLINK.app"
+/usr/bin/ditto "$app" "$package/Payload/BMWLink.app"
 (
   cd "$package"
   /usr/bin/zip -qry "$ipa" Payload

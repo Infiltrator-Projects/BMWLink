@@ -32,14 +32,14 @@ jobs:
           grep -Fq 'class LinkStandardProductViewModel' src/link/platform/apple/LinkDiagnosticUI.swift
           grep -Fq 'pollingSelectionStore.setGlobalStableKeys' src/link/platform/apple/LinkDiagnosticUI.swift
           grep -Fq 'linkVersionText = productController.linkVersionText' src/link/platform/apple/LinkDiagnosticUI.swift
-          grep -Fq 'final class ConnectionViewModel: LinkStandardProductViewModel' app/ios/BMWLINK/ConnectionViewModel.swift
-          test "$(wc -l < app/ios/BMWLINK/ConnectionViewModel.swift)" -lt 60
-          ! grep -Fq 'LinkVehicleProfileStore(' app/ios/BMWLINK/ConnectionViewModel.swift
-          grep -Fq 'LinkStandardProductContentView(' app/ios/BMWLINK/ContentView.swift
-          grep -Fq 'LinkStandardProductAppearance(' app/ios/BMWLINK/ContentView.swift
-          test "$(wc -l < app/ios/BMWLINK/ContentView.swift)" -lt 80
-          ! grep -Fq 'LinkTaskTile(' app/ios/BMWLINK/ContentView.swift
-          ! grep -Fq '0.15.4-compatible face' app/ios/BMWLINK/ContentView.swift
+          grep -Fq 'final class ConnectionViewModel: LinkStandardProductViewModel' app/ios/BMWLink/ConnectionViewModel.swift
+          test "$(wc -l < app/ios/BMWLink/ConnectionViewModel.swift)" -lt 60
+          ! grep -Fq 'LinkVehicleProfileStore(' app/ios/BMWLink/ConnectionViewModel.swift
+          grep -Fq 'LinkStandardProductContentView(' app/ios/BMWLink/ContentView.swift
+          grep -Fq 'LinkStandardProductAppearance(' app/ios/BMWLink/ContentView.swift
+          test "$(wc -l < app/ios/BMWLink/ContentView.swift)" -lt 80
+          ! grep -Fq 'LinkTaskTile(' app/ios/BMWLink/ContentView.swift
+          ! grep -Fq '0.15.4-compatible face' app/ios/BMWLink/ContentView.swift
       - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - run: cmake --build build --parallel
       - run: ctest --test-dir build --output-on-failure
@@ -147,7 +147,7 @@ jobs:
           grep -Fq 'LinkDiagnosticAboutView' src/link/platform/apple/LinkDiagnosticUI.swift
           grep -Fq 'descriptor.about = &about_info;' app/linux/main.c
           grep -Fq 'link_gtk_show_about' src/link/platform/linux/link-gtk-about.c
-          ! grep -Fq 'LinkHomeTile("OBD"' app/ios/BMWLINK/ContentView.swift
+          ! grep -Fq 'LinkHomeTile("OBD"' app/ios/BMWLink/ContentView.swift
           grep -Fq '@interface BmwLinkDiagnosticsController : LinkProductDiagnosticsController' platform/apple/BmwLinkDiagnosticsController.h
           grep -Fq 'return _shared.standardLiveValueRows;' src/link/platform/apple/LinkDiagnosticsController.m
           if grep -Eq '\.link-(connection-bar|device-row|adapter-combo|toolbar-button|link-button|save-session-button|card|status-chip)[^{]*\{[^}]*((min|max)-(width|height)|padding|border-radius)' app/linux/main.c; then
@@ -258,9 +258,9 @@ jobs:
         run: |
           set -euo pipefail
           version="$(tr -d '[:space:]' < VERSION)"
-          project_versions="$(grep -E '^[[:space:]]*MARKETING_VERSION = ' app/ios/BMWLINK.xcodeproj/project.pbxproj | sed -E 's/.*= ([^;]+);/\1/' | sort -u)"
+          project_versions="$(grep -E '^[[:space:]]*MARKETING_VERSION = ' app/ios/BMWLink.xcodeproj/project.pbxproj | sed -E 's/.*= ([^;]+);/\1/' | sort -u)"
           test "$project_versions" = "$version"
-          xcodebuild -project app/ios/BMWLINK.xcodeproj -scheme BMWLINK -configuration Release \
+          xcodebuild -project app/ios/BMWLink.xcodeproj -scheme BMWLink -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO \
             MARKETING_VERSION="$version" BMWLINK_SOURCE_REVISION="$GITHUB_SHA" LINK_SOURCE_REVISION="$(git -C src/link rev-parse HEAD)" build
 

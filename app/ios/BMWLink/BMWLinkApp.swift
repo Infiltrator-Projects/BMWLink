@@ -2,7 +2,7 @@
 import SwiftUI
 
 @main
-struct BMWLINKApp: App {
+struct BMWLinkApp: App {
     var body: some Scene {
         WindowGroup { ContentView() }
     }
