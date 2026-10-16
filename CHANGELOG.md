@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.30 — 2026-10-17
+
+- Pin the qualified canonical Link package and its Libraries dependency.
+
 ## 0.2.27 — 2026-10-16
 
 CI now qualifies and seals the source archive, Linux package, Windows executable and unsigned iPhone package. Publication consumes those exact artifacts, verifies commit/hash identity and compares draft and public bytes. Windows x86 launch qualification runs on a clean x64 runner.
